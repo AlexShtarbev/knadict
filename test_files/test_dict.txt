@@ -1,0 +1,28 @@
+�{
+  "dictionaryList": [
+    {
+      "word": "книга",
+      "translation": "book"
+    },
+    {
+      "word": "вечеря",
+      "translation": "dinner"
+    },
+    {
+      "word": "луна",
+      "translation": "moon"
+    },
+    {
+      "word": "гора",
+      "translation": "wood"
+    },
+    {
+      "word": "майка",
+      "translation": "mother"
+    },
+    {
+      "word": "голяма работа",
+      "translation": "big deal"
+    }
+  ]
+}
