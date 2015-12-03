@@ -1,4 +1,4 @@
-�{
+�{
   "dictionaryList": [
     {
       "word": "книга",
@@ -23,6 +23,18 @@
     {
       "word": "голяма работа",
       "translation": "big deal"
+    },
+    {
+      "word": "пол",
+      "translation": "gender"
+    },
+    {
+      "word": "вилица",
+      "translation": "fork"
+    },
+    {
+      "word": "лъжица",
+      "translation": "spoon"
     }
   ]
 }

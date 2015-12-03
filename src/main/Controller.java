@@ -10,11 +10,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Hashtable;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
 public class Controller {
 	private Hashtable<String, String> _dictionatyHashtable = new Hashtable<>();
 	private static Controller _controller;
@@ -33,26 +28,48 @@ public class Controller {
 		// FIXME create alert dialog
 		if(word == null || translation == null) return;
 		
-		String filePathName = getSubDictionaryPath(word.charAt(0));
-		cacheWords(readDictionaryFromFile(filePathName));		
+		String filePathName = provideSubDictionaryPath(word.charAt(0));
+		
+		// Get the subdictionary where the word has to be saved.
+		SubDictionary sd = new SubDictionary();
+		sd.parseAll(readDictionaryFromFile(filePathName));
+		
+		// Cache all the words from the dictionary into the Global dictionary.
+		cacheWords(sd);		
 		
 		if(_dictionatyHashtable != null) {
 			if(_dictionatyHashtable.containsKey(Utils.getStringInUTF8(word))) {
 				// FIXME create alert dialog
 				System.out.println("Word already exists");
 			} else {
-				DictionaryWord dw = new DictionaryWord(Utils.getStringInUTF8(word), Utils.getStringInUTF8(translation));	
-				SubDictionary sd = new SubDictionary();
-				sd.parseAll(readDictionaryFromFile(filePathName));
+				DictionaryWord dw = new DictionaryWord(Utils.getStringInUTF8(word), Utils.getStringInUTF8(translation));				
 				sd.addWord(dw);
-				sd.saveDictionaryToFile(filePathName);
+				sd.saveToFile(filePathName);
 			}
 		}
 	}
-
-	// TODO - Kolyo
-	private String getSubDictionaryPath(char firstLetter) {
+	
+	/**
+	 * Provides the path of the file where the subdictionary is saved as a JSON string.
+	 * @param firstLetter
+	 * @return
+	 */
+	private String provideSubDictionaryPath(char firstLetter) {
+		ensureValidPath();
+		// TODO - Kolyo - create a string of the full file path and return it (you can delete the current return statement below).
 		return "D:\\TU_3ti_Kurs\\PE\\Kursova\\kna_dictionary\\test_files\\test_dict.txt";
+	}
+	
+	/**
+	 * If the file does not exist - it is created.
+	 */
+	public void ensureValidPath() {
+		// TODO - Kolyo
+	}
+	
+	public String provideUserDesktopPath() {
+		File desktop = new File(System.getProperty("user.home"), "Desktop");
+		return desktop.getAbsolutePath();
 	}
 
 	private String readDictionaryFromFile(String filePathName) throws FileNotFoundException, IOException {
@@ -72,27 +89,10 @@ public class Controller {
 		return json;
 	}
 
-	private void cacheWords(String json) throws UnsupportedEncodingException {
-		if(json == null) return;
-		
-		JsonParser parser = new JsonParser();
-		// The JsonElement is the root node. It can be an object, array, null or
-		// java primitive.
-		JsonElement element = parser.parse(json);
-		
-		if (element.isJsonObject()) {
-		    JsonObject jDict = element.getAsJsonObject();
-		    // get all sets of <word>:<translation> 
-		    JsonArray datasets = jDict.getAsJsonArray(SubDictionary.DICTIONARY_LIST_JSON_KEY);
-		    // traverse the sting of sets and cache each set into the hashtbale
-		    for (int i = 0; i < datasets.size(); i++) {
-		        JsonObject jDataset = datasets.get(i).getAsJsonObject();
-		        
-		        String word = Utils.getStringInUTF8(jDataset.get(DictionaryWord.WORD_JSON_KEY).getAsString());
-		        String translation =  Utils.getStringInUTF8(jDataset.get(DictionaryWord.TRANSLATION_JSON_KEY).getAsString());
-		        
-		        _dictionatyHashtable.put(word, translation);
-		    }
+	private void cacheWords(SubDictionary subDict) throws UnsupportedEncodingException {
+		if(subDict == null) return;
+		for(DictionaryWord dw : subDict) {
+			_dictionatyHashtable.put(dw.getWord(), dw.getTranslation());
 		}
 	}
 }

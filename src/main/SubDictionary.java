@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -17,7 +18,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-public class SubDictionary {
+public class SubDictionary implements Iterable<DictionaryWord>{
 	public static final String DICTIONARY_LIST_JSON_KEY = "dictionaryList";
 	
 	public List<DictionaryWord> dictionaryList;
@@ -63,7 +64,7 @@ public class SubDictionary {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public void saveDictionaryToFile(String filePathName) throws FileNotFoundException, IOException {
+	public void saveToFile(String filePathName) throws FileNotFoundException, IOException {
 		DataOutputStream out = null;
 		try{
 		out = new DataOutputStream(new BufferedOutputStream(
@@ -104,5 +105,10 @@ public class SubDictionary {
 		        addWord(new DictionaryWord(word, translation));
 		    }
 		}
+	}
+
+	@Override
+	public Iterator<DictionaryWord> iterator() {
+		return dictionaryList.iterator();
 	}
 }
