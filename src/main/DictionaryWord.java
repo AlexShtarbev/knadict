@@ -3,6 +3,7 @@ package main;
 public class DictionaryWord {
 	public static final String WORD_JSON_KEY = "word";
 	public static final String TRANSLATION_JSON_KEY = "translation";
+	public static final String NO_TRANSLATION_AVAILABLE = "No translations is available.";
 	
 	public String word;
 	public String translation;

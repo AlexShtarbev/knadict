@@ -16,6 +16,11 @@ public class Controller {
 	private static final String DIRECTORY_NAME = "KNA Dictionary";
 	private static final String FILE_NAME_KEY = "kna_";
 	private static final String EXTENSION = ".txt";
+	private static final String INVALID_WORD_OR_TRANSLATION_FORMAT = "Invalid word or translation format.";
+	private static final String WORD_EXISTS = "Word already exists";
+	private static final String CREATEING_NEW_WORD_SUCCESSFUL = "Word added successfully.";
+	public static final String ERROR_CREATING_WORD = "An error has occured during the word creation.";
+	public static final String ERROR_SEARCHING_WORD = "An error has occured during the search.";
 	
 	private Controller() {};
 	
@@ -27,9 +32,8 @@ public class Controller {
 		return _controller;
 	}
 	
-	public void createDictionaryWord(String word, String translation) throws IOException, FailedToCreateDictionaryDirectoryExceptions {
-		// FIXME create alert dialog
-		if(word == null || translation == null) return;
+	public String createDictionaryWord(String word, String translation) throws IOException, FailedToCreateDictionaryDirectoryExceptions {
+		if(word == null || translation == null) return INVALID_WORD_OR_TRANSLATION_FORMAT;
 		
 		String filePathName = provideSubDictionaryPath(word.toLowerCase().charAt(0));
 		
@@ -42,14 +46,15 @@ public class Controller {
 		
 		if(_dictionatyHashtable != null) {
 			if(_dictionatyHashtable.containsKey(Utils.getStringInUTF8(word))) {
-				// FIXME create alert dialog
-				System.out.println("Word already exists");
+				return WORD_EXISTS;
 			} else {
 				DictionaryWord dw = new DictionaryWord(Utils.getStringInUTF8(word), Utils.getStringInUTF8(translation));				
 				sd.addWord(dw);
 				sd.saveToFile(filePathName);
 			}
 		}
+		
+		return CREATEING_NEW_WORD_SUCCESSFUL;
 	}
 	
 	/**
